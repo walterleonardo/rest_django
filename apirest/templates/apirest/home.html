@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}main page{% endblock title %}
+{% block content %}
+<div class="jumbotron">
+  <h1 class="display-4">INFO!</h1>
+  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+  <hr class="my-4">
+  <p>GET request, get all products</p><a href="http://localhost:8000/products/get/"><p>http://localhost:8000/products/get/</p></a>
+  <p>GET request, get one product by id or delete if request is DELETE</p> <a href="http://localhost:8000/products/get/0/"><p>http://localhost:8000/products/get/0/</p></a>
+  <p>GET request, delete one product by id</p> <a href="http://localhost:8000/products/del/0/"><p>http://localhost:8000/products/del/0/</p></a>
+</div>
+{% endblock content %}
