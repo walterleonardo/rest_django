@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}main page{% endblock title %}
 {% block content %}
+{% if user.is_authenticated %}
 <div class="card-columns">
 {% for product in products %}
     <div class="card">
@@ -13,4 +14,9 @@
     </div>
 {% endfor %}
 </div>
+{% else %}
+  <p>You are not logged in</p>
+  <a href="/admin/login">Log In</a>
+{% endif %}
+
 {% endblock content %}

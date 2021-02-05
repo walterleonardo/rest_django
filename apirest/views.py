@@ -39,7 +39,7 @@ def upload_file_view(request):
 
 def products(request):
     products = Product.objects.all()
-    return render(request, 'apirest/products.html',  {'products':products})
+    return render(request, 'apirest/show_products.html',  {'products':products})
 
 def home(request):
     return render(request, 'apirest/home.html',  {})

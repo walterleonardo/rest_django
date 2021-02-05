@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 
 class Product(models.Model):
     title       = models.CharField(max_length=200)
-    description = models.CharField(max_length=1000)
-    image       = models.CharField(max_length=1000)
+    description = models.CharField(max_length=1000, blank=True, null=True)
+    image       = models.CharField(max_length=1000, blank=True, null=True)
     updated     = models.DateTimeField(auto_now=True)
     created     = models.DateTimeField(auto_now_add=True)
 
