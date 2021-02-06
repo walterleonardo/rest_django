@@ -3,16 +3,22 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="card-columns">
+{% if products %}
 {% for product in products %}
     <div class="card">
-        <img class="card-img-top" src="{{product.image}}" alt="No image">
+            <img class="card-img-top"  src="{{product.image}}" alt="No image" > 
         <div class="card-body">
-            <h5 class="card-title">{{product.title}}</h5>
-            <p class="card-text">{{product.description}}</p>
+            <h5 class="card-title">{{product.title| striptags | safe | escape}}</h5>
+            <p class="card-text">{{product.description |striptags | safe | escape}}</p>
             <p class="card-text"><small class="text-muted">{{product.updated}}</small></p>
         </div>
     </div>
 {% endfor %}
+{% else %}
+<div class="" role="alert">
+  Product list empty, please <a href="/upload" >upload file!</a>
+</div>
+{% endif %}
 </div>
 {% else %}
   <p>You are not logged in</p>

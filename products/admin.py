@@ -4,7 +4,7 @@ from .models import Product
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("title", "description", "image", "updated")
+    list_display = ("id","title", "description", "image", "updated")
     list_filter = ("title", )
     search_fields = ("title__startswith", )
     fields = ("title", "description", "image")

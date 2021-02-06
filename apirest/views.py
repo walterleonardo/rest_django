@@ -8,7 +8,14 @@ from products.models import Product
 from django.core import serializers
 import csv
 import json
+import requests
 
+def is_url_image(image_url):
+	image_formats = ("image/png", "image/jpeg", "image/jpg")
+	r = requests.head(image_url)
+	if r.headers["content-type"] in image_formats:
+		return True
+	return False
 
 def upload_file_view(request):
     #get file and create object
@@ -25,9 +32,15 @@ def upload_file_view(request):
             #distribute values
             for i, row in enumerate(reader):
                 if i != 0:
-                    title = row[0]
-                    description = row[1]
-                    image = row[2]
+                    try:
+                        title = row[0] or 'title'
+                        description = row[1] or 'description'
+                        if is_url_image(row[2]):
+                            image = row[2]
+                        else:
+                            image = '/static/no_image.png'       
+                    except:
+                        continue
                     #create object
                     Product.objects.create(
                         title = title,
@@ -38,7 +51,7 @@ def upload_file_view(request):
     return render(request, 'apirest/upload.html',  {'form':form})
 
 def products(request):
-    products = Product.objects.all()
+    products = Product.objects.all().order_by('-id')
     return render(request, 'apirest/show_products.html',  {'products':products})
 
 def home(request):
@@ -98,3 +111,5 @@ def del_product(request, id=0):
     if id != 0:
         Product.objects.filter(pk=id).delete()   
     return render(request, 'apirest/home.html',  {})
+
+
