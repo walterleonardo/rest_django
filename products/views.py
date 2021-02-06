@@ -7,7 +7,6 @@ from rest_framework.response import Response
 from .models import Product
 from .serializers import ProductSerializer
 
-
 @api_view(['GET', 'POST', 'DELETE'])
 def Products(request, id=0):
 
