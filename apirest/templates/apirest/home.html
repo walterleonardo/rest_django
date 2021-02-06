@@ -4,6 +4,7 @@
 <div class="jumbotron">
   <h1 class="display-4">INFO!</h1>
   <p class="lead"></p>
+  <div class="row">
   <div class="col-4">
     <hr class="my-4">
     <p class="lead"> This is a rest version with external app django-rest-framework</p>
@@ -15,10 +16,11 @@
     <div class="col-4">
     <hr class="my-4">
     <p class="lead"> This is a rest version without external app</p>
-    <p>GET request, get all products</p><a href="http://localhost:8000/products/get/"><p>http://localhost:8000/products/get/</p></a>
-    <p>GET request, get one product by id or delete if request is DELETE</p> <a href="http://localhost:8000/products/get/0/"><p>http://localhost:8000/products/get/0/</p></a>
-    <p>DELETE request, delete one product by id</p> <a href="http://localhost:8000/products/get/0/"><p>http://localhost:8000/products/get/0/</p></a>
-    <p>GET request, delete one product by id</p> <a href="http://localhost:8000/products/del/0/"><p>http://localhost:8000/products/del/0/</p></a>
+    <p>GET request, get all products</p><a href="http://localhost:8000/products/"><p>http://localhost:8000/products/</p></a>
+    <p>GET request, get one product by id or delete if request is DELETE</p> <a href="http://localhost:8000/products/0/"><p>http://localhost:8000/products/0/</p></a>
+    <p>DELETE request, delete one product by id</p> <a href="http://localhost:8000/products/0/"><p>http://localhost:8000/products/0/</p></a>
+    <p>POST request, create one product</p> <a href="http://localhost:8000/products/title/description/image"><p>http://localhost:8000/products/0/</p></a>
   </div>
+</div>
 </div>
 {% endblock content %}

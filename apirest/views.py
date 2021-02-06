@@ -7,8 +7,11 @@ from django.contrib.auth.models import User
 from products.models import Product
 from django.core import serializers
 import csv
-import json
 import requests
+from django.http import Http404
+from django.views.decorators.csrf import csrf_exempt
+
+
 
 def is_url_image(image_url):
 	image_formats = ("image/png", "image/jpeg", "image/jpg")
@@ -17,7 +20,7 @@ def is_url_image(image_url):
 		return True
 	return False
 
-def upload_file_view(request):
+def upload_file_view(request, *args, **kwargs):
     #get file and create object
     form = CsvModelForm(request.POST or None, request.FILES or None)
     if form.is_valid():
@@ -50,14 +53,14 @@ def upload_file_view(request):
             return HttpResponseRedirect('/')
     return render(request, 'apirest/upload.html',  {'form':form})
 
-def products(request):
+def products(request, *args, **kwargs):
     products = Product.objects.all().order_by('-id')
     return render(request, 'apirest/show_products.html',  {'products':products})
 
 def home(request):
     return render(request, 'apirest/home.html',  {})
 
-def get_products(request):
+def get_products(request, *args, **kwargs):
     products = Product.objects.all()
     if request.method == 'GET':
         return HttpResponse(
@@ -66,50 +69,46 @@ def get_products(request):
         )        
     return render(request, 'apirest/home.html',  {})
 
-
-def get_product(request, id=None, title=None, description=None, image=None):
+@csrf_exempt
+def get_product(request, *args, **kwargs):
     product = {}
-    if id != 0:
+    id = request.GET.get('id',None)
+    title = request.POST.get('title',None)
+    description = request.POST.get('description',None)
+    image = request.POST.get('image',None)
+    if request.method == 'GET' and id and isinstance(id, int):
         product = Product.objects.filter(pk=id)
-
+        if not product:
+            raise Http404("No Product matches the given query.")
+        return HttpResponse(
+        serializers.serialize("json", product),
+        content_type="application/json"
+        )  
     if request.method == 'GET':
-        print("metod GET")
-
+        product = Product.objects.all()
+        if not product:
+            raise Http404("No Products matches the given query.")
         return HttpResponse(
         serializers.serialize("json", product),
         content_type="application/json"
         )      
     if request.method == 'DELETE':
-        print("metod DELETE")
-        if id != 0:
+        if id:
             Product.objects.filter(pk=id).delete()   
+            raise Http404("Product deleted")
+        raise Http404("Required field: id")
+
     if request.method == 'POST':
-        print("metod POST")
         if not id and title and description and image:
-            Product.objects.create(
+            product = Product.objects.create(
                             title = title,
                             description = description,
                             image = image,
                         )
-    if request.method == 'PATCH':
-        print("metod PATCH")
-        if id and title and description and image:
-            Product.objects.create(
-                            title = title,
-                            description = description,
-                            image = image,
-                        )
-            product, created = Product.objects.get_or_create(pk=id)
-            if created:
-                product.title = title
-                product.description = description
-                product.image = image
-    return render(request, 'apirest/home.html',  {})
+            raise Http404("Product created")
+        else:
+            raise Http404("Required fields: ?title=' '& description=' '& image=' '")
 
-
-def del_product(request, id=0):
-    if id != 0:
-        Product.objects.filter(pk=id).delete()   
     return render(request, 'apirest/home.html',  {})
 
 

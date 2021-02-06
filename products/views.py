@@ -8,9 +8,9 @@ from .models import Product
 from .serializers import ProductSerializer
 
 @api_view(['GET', 'POST', 'DELETE'])
-def Products(request, id=0):
-
-    if request.method == 'GET' and id != 0 and isinstance(id, int):
+def Products(request, *args, **kwargs):
+    id = request.GET.get('id',None)
+    if request.method == 'GET' and id and isinstance(id, int):
         snippets = Product.objects.filter(pk=id)
         serializer = ProductSerializer(snippets, many=True)
         return Response(serializer.data)
