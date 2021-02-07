@@ -25,7 +25,7 @@ SECRET_KEY = 'qhc=n_-esmlz)-e5_0lk9ac=__)9epb&qu!q0yto#i^r=)9*r%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost']
+ALLOWED_HOSTS = ['127.0.0.1','.localhost','0.0.0.0','walii.es','[::1]']
 
 
 # Application definition
