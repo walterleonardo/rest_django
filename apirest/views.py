@@ -60,54 +60,41 @@ def products(request, *args, **kwargs):
 def home(request):
     return render(request, 'apirest/home.html',  {})
 
-def get_products(request, *args, **kwargs):
-    products = Product.objects.all()
-    if request.method == 'GET':
-        return HttpResponse(
-        serializers.serialize("json", products),
-        content_type="application/json"
-        )        
-    return render(request, 'apirest/home.html',  {})
-
 @csrf_exempt
 def get_product(request, *args, **kwargs):
-    product = {}
+    product = []
     id = request.GET.get('id',None)
     title = request.POST.get('title',None)
     description = request.POST.get('description',None)
     image = request.POST.get('image',None)
-    if request.method == 'GET' and id and isinstance(id, int):
+    if request.method == 'GET' and id:
         product = Product.objects.filter(pk=id)
         if not product:
-            raise Http404("No Product matches the given query.")
-        return HttpResponse(
-        serializers.serialize("json", product),
-        content_type="application/json"
-        )  
+            product = []
+        return HttpResponse(serializers.serialize("json", product),content_type="application/json")  
     if request.method == 'GET':
         product = Product.objects.all()
         if not product:
-            raise Http404("No Products matches the given query.")
-        return HttpResponse(
-        serializers.serialize("json", product),
-        content_type="application/json"
-        )      
+            product = []
+        return HttpResponse(serializers.serialize("json", product),content_type="application/json")      
     if request.method == 'DELETE':
         if id:
             Product.objects.filter(pk=id).delete()   
-            raise Http404("Product deleted")
-        raise Http404("Required field: id")
+            return HttpResponse([{'Product deleted':id}],content_type="application/json")
+        return HttpResponse([{'Required fields':'id'}],content_type="application/json")
 
     if request.method == 'POST':
-        if not id and title and description and image:
+        if not id and title:
             product = Product.objects.create(
                             title = title,
                             description = description,
                             image = image,
                         )
-            raise Http404("Product created")
+            product_created = Product.objects.filter(pk=product.pk)
+            return HttpResponse(serializers.serialize("json", product_created),content_type="application/json")    
         else:
-            raise Http404("Required fields: ?title=' '& description=' '& image=' '")
+            product = [{'Required fields':'title'}]
+            return HttpResponse(product,content_type="application/json")
 
     return render(request, 'apirest/home.html',  {})
 

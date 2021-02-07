@@ -10,7 +10,7 @@ from .serializers import ProductSerializer
 @api_view(['GET', 'POST', 'DELETE'])
 def Products(request, *args, **kwargs):
     id = request.GET.get('id',None)
-    if request.method == 'GET' and id and isinstance(id, int):
+    if request.method == 'GET' and id:
         snippets = Product.objects.filter(pk=id)
         serializer = ProductSerializer(snippets, many=True)
         return Response(serializer.data)
@@ -28,6 +28,6 @@ def Products(request, *args, **kwargs):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE': 
-        if id != 0 and isinstance(id, int):
+        if id:
             Product.objects.filter(pk=id).delete()   
             return Response(status=status.HTTP_204_NO_CONTENT)
